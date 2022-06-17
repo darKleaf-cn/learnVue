@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="../vue.js"></script>
+</head>
+
+<body>
+	<div id="app">
+		<child @click="hookFromParent"  :msg-from-father="msg" :hit-from-father="hit">
+		</child>
+	</div>
+	<script>
+		const childComponent = Vue.component('child', {
+			template: '<div><p @click="showMsgFromSon">{{msgFromFather}} and {{hitFromFather}}</p></div>',
+			data: function () {
+				return {
+					childMsg: 'Hello, I am Child'
+				}
+			},
+			props: ['msgFromFather', 'hitFromFather'],
+			methods: {
+				showMsgFromSon() {
+					console.log('Hello Vue from son')
+				}
+			},
+			mounted() {
+				console.log('child mounted')
+			}
+		})
+		const app = new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					msg: 'Hello Chris, I am your father',
+					hit: 'I will hit you if you do not study',
+				}
+			},
+			components: {
+				childComponent
+			},
+			mounted(){
+				this.$on()
+			},
+			methods: {
+				hoverFromParent() {
+					console.log('attch event')
+				},
+				hookFromParent() {
+					console.log('attch hook')
+				}
+			}
+		})
+		console.log(app)
+	</script>
+</body>
+
+</html>
