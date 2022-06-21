@@ -1,7 +1,22 @@
 import { del, observe, set } from '../../../../vue-src/core/observer';
 import Watcher from '../observer/watcher';
-import { warn, isPlainObject, hasOwn, isReserved } from '../util/index';
+import { warn, isPlainObject, hasOwn, isReserved, noop } from '../util/index';
 
+const sharedPropertyDefinition = {
+	enumerable: true,
+	configurable: true,
+	get: noop,
+	set: noop
+}
+export function proxy(target, sourceKey, key) {
+	sharedPropertyDefinition.get = function() {
+		return target[sourceKey][key];
+	}
+	sharedPropertyDefinition.set = function(val) {
+		target[sourceKey][key] = val;
+	}
+	Object.defineProperty(target, key, sharedPropertyDefinition);
+}
 export function initState(vm) {
   vm._watchers = [];
   const opts = vm.$options;
@@ -42,8 +57,12 @@ function initData(vm) {
   while (i--) {
     if (hasOwn(props, keys[i])) {
 			process.env.NODE_ENV !== 'production' && warn('');
-    }
+    } else if(!isReserved(keys[i])) {
+			proxy(data, '_data', keys[i]);
+		}
   }
+
+	observe(data, true);
 }
 
 function getData(data, vm) {

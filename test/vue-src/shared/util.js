@@ -13,6 +13,10 @@ export function remove(arr, item) {
   }
 }
 
+export function isObject(obj) {
+	return obj !== null && typeof obj === 'object';
+}
+
 export function isPlainObject(obj) {
 	return Object.prototype.toString.call(obj) === '[object object]';
 }
